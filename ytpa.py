@@ -94,8 +94,14 @@ class YouTube:
         """Return all videos uploaded by the user."""
         uri = self.user_base_uri % username
         feed = self.service.GetYouTubeVideoFeed(uri)
-        return [re.search(self.youtube_id_regex, video.id.text).group(1)
-                for video in feed.entry]
+        all_videos = []
+        while feed is not None:
+            all_videos.extend([re.search(self.youtube_id_regex, video.id.text).group(1) for video in feed.entry])
+            next_page = feed.GetNextLink()
+            if next_page is None:
+                break
+            feed = self.service.Query(next_page.href)
+        return all_videos
 
     def all_videos_of_playlist(self, playlist_id):
         """Return all videos of the playlist."""
