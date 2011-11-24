@@ -94,6 +94,15 @@ class YouTube:
         """Return all videos uploaded by the user."""
         uri = self.user_base_uri % username
         feed = self.service.GetYouTubeVideoFeed(uri)
+        return self.all_videos_of_feed(feed)
+
+    def all_videos_of_playlist(self, playlist_id):
+        """Return all videos of the playlist."""
+        uri = self.playlist_uri_from_id(playlist_id)
+        feed = self.service.GetYouTubePlaylistVideoFeed(uri=uri)
+        return self.all_videos_of_feed(feed)
+
+    def all_videos_of_feed(self, feed):
         all_videos = []
         while feed is not None:
             all_videos.extend([re.search(self.youtube_id_regex, video.id.text).group(1) for video in feed.entry])
@@ -102,13 +111,6 @@ class YouTube:
                 break
             feed = self.service.Query(next_page.href)
         return all_videos
-
-    def all_videos_of_playlist(self, playlist_id):
-        """Return all videos of the playlist."""
-        uri = self.playlist_uri_from_id(playlist_id)
-        all_videos = self.service.GetYouTubePlaylistVideoFeed(uri=uri)
-        return [re.search(self.youtube_id_regex, video.id.text).group(1)
-                for video in all_videos.entry]
 
     def playlists_exists(self, playlist_id):
         """Return whether the playlist exists."""
