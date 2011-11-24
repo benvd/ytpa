@@ -46,8 +46,7 @@ class YouTube:
     """Wrapper around Google's YouTube API, to make it a little
     less horrible to use. YMMV"""
 
-    video_id_regex = re.compile('\?v=([A-Za-z0-9_-]+)&')
-    playlist_id_regex = re.compile('/([A-Za-z0-9_-]+)$')
+    youtube_id_regex = re.compile('/([A-Za-z0-9_-]+)$')
     user_base_uri = 'http://gdata.youtube.com/feeds/api/users/%s/uploads'
     playlist_base_uri = 'http://gdata.youtube.com/feeds/api/playlists/%s'
 
@@ -72,7 +71,7 @@ class YouTube:
 
     def playlist_id_from_uri(self, playlist_uri):
         """Return the id of the playlist url."""
-        return re.search(self.playlist_id_regex, playlist_uri).group(1)
+        return re.search(self.youtube_id_regex, playlist_uri).group(1)
 
     def playlist_uri_from_id(self, playlist_id):
         """Return the uri for the playlist id."""
@@ -95,14 +94,14 @@ class YouTube:
         """Return all videos uploaded by the user."""
         uri = self.user_base_uri % username
         feed = self.service.GetYouTubeVideoFeed(uri)
-        return [re.search(self.video_id_regex, video.media.player.url).group(1)
+        return [re.search(self.youtube_id_regex, video.id.text).group(1)
                 for video in feed.entry]
 
     def all_videos_of_playlist(self, playlist_id):
         """Return all videos of the playlist."""
         uri = self.playlist_uri_from_id(playlist_id)
         all_videos = self.service.GetYouTubePlaylistVideoFeed(uri=uri)
-        return [re.search(self.video_id_regex, video.media.player.url).group(1)
+        return [re.search(self.youtube_id_regex, video.id.text).group(1)
                 for video in all_videos.entry]
 
     def playlists_exists(self, playlist_id):
