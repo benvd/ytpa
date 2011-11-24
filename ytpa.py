@@ -6,14 +6,6 @@
 # To Public License, Version 2, as published by Sam Hocevar. See
 # http://sam.zoy.org/wtfpl/COPYING for more details.
 
-# TODO: better error handling for exceptions from google's api
-
-# TODO: config file (~/.ytpa)
-#  - dev key
-#  - username
-#  - email
-#  - default playlist (will be used if none specified)
-
 from gdata.base.service import RequestError
 import argparse
 import gdata.youtube.service
