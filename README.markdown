@@ -28,13 +28,6 @@ optional arguments:
 </pre>
 
 
-Known limitations
------------------
-
-Right now, only the first 25 videos of a user or a playlist will be used,
-until I figure out how the pagination works with Google's YouTube API.
-
-
 License
 -------
 

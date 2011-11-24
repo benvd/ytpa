@@ -6,9 +6,6 @@
 # To Public License, Version 2, as published by Sam Hocevar. See
 # http://sam.zoy.org/wtfpl/COPYING for more details.
 
-# FIXME: retrieve all videos from a user/playlist, as opposed to
-# only the first 25
-
 # TODO: better error handling for exceptions from google's api
 
 # TODO: config file (~/.ytpa)
