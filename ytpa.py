@@ -14,11 +14,6 @@
 #  - email
 #  - default playlist (will be used if none specified)
 
-# TODO: implement private playlist creation
-
-# TODO: make sure playlist ID vs name usage is consistent
-# in the YouTube class
-
 from gdata.base.service import RequestError
 import argparse
 import gdata.youtube.service
@@ -32,6 +27,8 @@ At the moment YTPA supports adding videos from any number of users and/or playli
 USERNAME_HELP = """user whose videos will be processed, you may specify this argument multiple times"""
 PLAYLIST_HELP = """playlist of which the videos will be processed, you may specify this argument multiple times.
 Must be specified in the form of \"username/playlistname\"."""
+PRIVATE_HELP = """if the destination playlist does not yet exist, create it as a private playlist.
+Default is a public playlist."""
 DESTINATION_HELP = """the playlist to which all videos will be added. It will be created if it doesn\'t exist"""
 
 DEVELOPER_KEY = ''
@@ -121,7 +118,7 @@ class YouTube:
     def create_playlist(self, name, description=None, private=False):
         """Create a playlist and return the playlist id.
         Will fail if the playlists already exists."""
-        playlist = self.service.AddPlaylist(name, description)
+        playlist = self.service.AddPlaylist(name, description, private)
         return self.playlist_id_from_uri(playlist.id.text)
 
     def add_video_to_playlist(self, video_id, playlist_id):
@@ -157,7 +154,7 @@ def main():
 
     if destination_playlist_id is None:
         print 'Playlist %s not found, creating it ...' % args.destination_playlist
-        destination_playlist_id = youtube.create_playlist(args.destination_playlist)
+        destination_playlist_id = youtube.create_playlist(args.destination_playlist, private=args.private)
 
     if args.username is not None:
         for user in args.username:
@@ -177,6 +174,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description=DESCRIPTION)
     parser.add_argument('-u', '--username', help=USERNAME_HELP, action='append')
     parser.add_argument('-p', '--playlist', help=PLAYLIST_HELP, action='append')
+    parser.add_argument('--private', help=PRIVATE_HELP, action='store_true', default=False)
     parser.add_argument('destination_playlist', help=DESTINATION_HELP)
 
     args = parser.parse_args()
