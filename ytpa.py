@@ -45,7 +45,7 @@ EMAIL_ADDRESS = ''
 class YouTube:
     """Wrapper around Google's YouTube API, to make it a little
     less horrible to use. YMMV"""
-    
+
     video_id_regex = re.compile('\?v=([A-Za-z0-9_-]+)&')
     playlist_id_regex = re.compile('/([A-Za-z0-9_-]+)$')
     user_base_uri = 'http://gdata.youtube.com/feeds/api/users/%s/uploads'
@@ -132,7 +132,7 @@ class YouTube:
         for video_id in all_videos:
             self.add_video_to_playlist(video_id, playlist_id)
 
-    
+
     def add_playlist_videos_to_playlist(self, source_playlist_id, destination_playlist_id):
         """Add all videos of the source playlist to the destination playlist."""
         all_videos = self.all_videos_of_playlist(source_playlist_id)
@@ -142,15 +142,15 @@ class YouTube:
 
 def main():
     args = parse_args()
-    
+
     password = getpass.getpass()
     youtube = YouTube(DEVELOPER_KEY, EMAIL_ADDRESS, password)
     print 'Logging in to YouTube ...'
     youtube.authenticate()
-    
+
     print 'Getting playlist id for playlist %s ...' % args.destination_playlist
     destination_playlist_id = youtube.playlist_id(USERNAME, args.destination_playlist)
-    
+
     if destination_playlist_id is None:
         print 'Playlist %s not found, creating it ...' % args.destination_playlist
         destination_playlist_id = youtube.create_playlist(args.destination_playlist)
