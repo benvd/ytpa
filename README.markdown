@@ -25,6 +25,9 @@ optional arguments:
                         playlist of which the videos will be processed, you
                         may specify this argument multiple times. Must be
                         specified in the form of "username/playlistname".
+  --private             if the destination playlist does not yet exist, create
+                        it as a private playlist. Default is a public
+                        playlist.
 </pre>
 
 
