@@ -81,15 +81,15 @@ class YouTube:
     def playlist_id(self, username, playlist_name):
         """Return the playlist id for the given user/playlist combo.
         Return None if no such playlist exists."""
-        all_playlists = self.all_playlists_of_user(username)
-        for playlist in all_playlists.entry:
-            if playlist.title.text == playlist_name:
-                return self.playlist_id_from_uri(playlist.id.text)
-        return None
-
-    def all_playlists_of_user(self, username):
-        """ Return all playlists of the user"""
-        return self.service.GetYouTubePlaylistFeed(username=username)
+        playlists = self.service.GetYouTubePlaylistFeed(username=username)
+        while playlists is not None:
+            for playlist in playlists.entry:
+                if playlist.title.text == playlist_name:
+                    return self.playlist_id_from_uri(playlist.id.text)
+            next_page = playlists.GetNextLink()
+            if next_page is None:
+                return None
+            playlists = self.service.Query(next_page.href)
 
     def all_videos_of_user(self, username):
         """Return all videos uploaded by the user."""
